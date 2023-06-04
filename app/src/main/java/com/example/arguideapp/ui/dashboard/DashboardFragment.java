@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 
 
 import androidx.annotation.NonNull;
@@ -39,17 +41,22 @@ import com.azure.storage.blob.models.*;
 import java.io.*;
 
 import com.azure.storage.common.StorageSharedKeyCredential;
+import com.example.arguideapp.MainActivity;
 import com.example.arguideapp.R;
 import com.example.arguideapp.databinding.FragmentDashboardBinding;
 
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
 
 public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
 
     private Button button_camera;
+
+    private static String currentLink;
 
     private Button button_gallerey;
     private ImageView imageview;
@@ -66,6 +73,12 @@ public class DashboardFragment extends Fragment {
             System.err.printf("Failed to upload from file: %s%n", ex.getMessage());
         }
     }*/
+
+    public static String getCurrentLink() {
+        return currentLink;
+    }
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -127,7 +140,7 @@ public class DashboardFragment extends Fragment {
                 final InputStream imageStream = getContext().getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                 imageview.setImageBitmap(selectedImage);
-                //Azure(selectedImage);
+                Azure(selectedImage);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -231,9 +244,22 @@ public class DashboardFragment extends Fragment {
 
         Log.e("123", blobClient.getBlobUrl() );
 
+        //DashBoardFragmentLinkStorage.sLastLink = blobClient.getBlobUrl(); //
+
+        currentLink = blobClient.getBlobUrl();
+
+        ImageAnalysisQuickstart.main();
+        //imageAv
+
+
+
+
+        Toast.makeText(DashboardFragment.super.getContext(), ImageAnalysisQuickstart.getCurrentRequest(), Toast.LENGTH_SHORT).show();
+        //DashBoardFragmentLinkStorage.LastRequest
+
+
 
         //TODO: Женя
-
 
 
 
