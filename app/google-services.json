@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "3584891559",
+    "project_id": "arguideapp-a18ff",
+    "storage_bucket": "arguideapp-a18ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3584891559:android:d654b7d9b2e63ed3cc1982",
+        "android_client_info": {
+          "package_name": "com.example.arguideapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3584891559-kfhq47g54hf8p9fjgm64o3qq74argoeq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0jMXYrRJA1HJZ5bXWWoHfuFgCAWiFD5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "3584891559-kfhq47g54hf8p9fjgm64o3qq74argoeq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
