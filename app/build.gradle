@@ -42,7 +42,7 @@ android {
 }
 
 dependencies {
-
+    implementation 'com.android.databinding:compiler:3.1.4'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -55,13 +55,17 @@ dependencies {
     //implementation 'com.azure:azure-identity:1.9.0'
     //implementation 'com.azure:azure-core:1.40.0'
     implementation 'com.azure:azure-storage-blob:12.14.1'
-    //implementation 'com.azure:azure-sdk-bom:1.2.13'
+    ///implementation 'com.azure:azure-sdk-bom:1.2.13'
     implementation 'javax.xml.stream:stax-api:1.0-2'
     implementation 'com.microsoft.azure.cognitiveservices:azure-cognitiveservices-computervision:1.0.9-beta'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.9'
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
+    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
 
 }
