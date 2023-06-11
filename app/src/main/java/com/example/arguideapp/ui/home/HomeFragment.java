@@ -1,5 +1,6 @@
 package com.example.arguideapp.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +17,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.arguideapp.R;
 import com.example.arguideapp.User;
 import com.example.arguideapp.UsersViewModel;
 import com.example.arguideapp.databinding.FragmentHomeBinding;
+import com.example.arguideapp.history;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +124,7 @@ public class HomeFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            List<User> userList = new ArrayList<>();
+                            //List<User> userList = new ArrayList<>();
                             //if (snapshot.getValue(String.class) == user.getUid()) {
 
                             for (DataSnapshot dataSnapshot : snapshot.getChildren())
@@ -134,7 +137,8 @@ public class HomeFragment extends Fragment {
                                     //User user1 = dataSnapshot.getValue(User.class);
                                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                                     {
-                                        Picasso.with(getContext()).load(dataSnapshot1.child("link").getValue(String.class)).into(lastimage);
+                                        Glide.with(getContext()).load(dataSnapshot1.child("link").getValue(String.class)).into(lastimage);
+                                        //Picasso.with(getContext()).load(dataSnapshot1.child("link").getValue(String.class)).into(lastimage);
                                         show_name_text.setText(dataSnapshot1.child("name").getValue(String.class));
 
                                     }
@@ -169,7 +173,8 @@ public class HomeFragment extends Fragment {
         button_history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = history.newIntent(HomeFragment.this.getContext());
+                startActivity(intent);
 
             }
         });
