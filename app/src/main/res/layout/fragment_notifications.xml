@@ -14,7 +14,7 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="30dp"
         android:text="Выйти"
         android:textSize="20sp"
         app:cornerRadius="35dp"

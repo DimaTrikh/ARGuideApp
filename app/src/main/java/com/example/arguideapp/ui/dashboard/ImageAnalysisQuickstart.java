@@ -73,7 +73,7 @@ public class ImageAnalysisQuickstart {
         featuresToExtractFromRemoteImage.add(VisualFeatureTypes.FACES);
         featuresToExtractFromRemoteImage.add(VisualFeatureTypes.ADULT);
         featuresToExtractFromRemoteImage.add(VisualFeatureTypes.COLOR);
-        //featuresToExtractFromRemoteImage.add(VisualFeatureTypes.IMAGE_TYPE);
+        featuresToExtractFromRemoteImage.add(VisualFeatureTypes.IMAGE_TYPE);
 
         try {
             // В вашем коде, где нужно выполнить анализ изображения

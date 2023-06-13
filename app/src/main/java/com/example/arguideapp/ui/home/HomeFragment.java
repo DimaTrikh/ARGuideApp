@@ -18,8 +18,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.arguideapp.AchievementActivity;
 import com.example.arguideapp.R;
-import com.example.arguideapp.User;
 import com.example.arguideapp.UsersViewModel;
 import com.example.arguideapp.databinding.FragmentHomeBinding;
 import com.example.arguideapp.history;
@@ -32,11 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 //import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import reactor.core.scheduler.Schedulers;
 
 public class HomeFragment extends Fragment {
 
@@ -48,8 +43,15 @@ public class HomeFragment extends Fragment {
     private Button button_history;
     private ImageView lastimage;
 
-    private TextView show_name_text;
+    private Button achievementButton;
+    private ImageView achievementImage;
+    private TextView show_achievement;
 
+    private String link;
+
+    private TextView show_name_text;
+    private static DatabaseReference usersAchievementsReference;
+    private static DatabaseReference achievementsReference;
 
     private static FirebaseDatabase firebaseDatabase;
 
@@ -70,15 +72,15 @@ public class HomeFragment extends Fragment {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
-
+        firebaseDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        usersAchievementsReference = firebaseDatabase.getReference("UsersAchievements");
+        achievementsReference = firebaseDatabase.getReference("Achievements");
+        usersReference = firebaseDatabase.getReference("Users");
 
-       firebaseDatabase = FirebaseDatabase.getInstance();
-       usersReference = firebaseDatabase.getReference("Users");
-
-
+        //AchievementListeners();
 
         //button_history = findViewById()
 
@@ -92,75 +94,133 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
+        initViews(view);
         viewModel = new ViewModelProvider(this).get(UsersViewModel.class);
-        button_history = getView().findViewById(R.id.button_history);
-        lastimage = getView().findViewById(R.id.lastimage);
-        show_name_text = getView().findViewById(R.id.show_name_text);
 
 
 
 
 
 
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //TODO: ОБРАБОТАТЬ ОШИБКУ С ПЕРВЫМ ПОЛЬЗОВАТЕЛЕМ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
 
-                    usersReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+        Thread thread = new Thread(() -> {
+            mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
 
-                            //List<User> userList = new ArrayList<>();
-                            //if (snapshot.getValue(String.class) == user.getUid()) {
 
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren())
-                            {
-                                //Log.e(dataSnapshot.getKey(), user.getUid());
-                                if(user.getUid().equals(dataSnapshot.getKey()))
-                                {
-                                    //Log.e("УРААААААА","");
-                                    //Log.e("!!!!", dataSnapshot.getValue().toString());
-                                    //User user1 = dataSnapshot.getValue(User.class);
-                                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
-                                    {
-                                        Glide.with(getContext()).load(dataSnapshot1.child("link").getValue(String.class)).into(lastimage);
-                                        //Picasso.with(getContext()).load(dataSnapshot1.child("link").getValue(String.class)).into(lastimage);
-                                        show_name_text.setText(dataSnapshot1.child("name").getValue(String.class));
+                        usersAchievementsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    if (user.getUid().equals(dataSnapshot.getKey())) {
+
+                                        for (DataSnapshot usersAchievementsSnapshot1 : dataSnapshot.getChildren()) {
+                                            Boolean status = usersAchievementsSnapshot1.child("status").getValue(Boolean.class);
+
+                                            achievementsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshotachieve) {
+
+                                                    for (DataSnapshot dataSnapshotachieve : snapshotachieve.getChildren()) {
+                                                        if (dataSnapshotachieve.getKey().equals(usersAchievementsSnapshot1.getKey())) {
+                                                            if (status) {
+                                                                link = dataSnapshotachieve.child("completedLinkImage").getValue(String.class);
+                                                            } else {
+                                                                link = dataSnapshotachieve.child("notCompletedLinkImage").getValue(String.class);
+                                                            }
+                                                            Log.e(link, dataSnapshotachieve.child("achievementName").getValue(String.class));
+
+
+                                                            Glide.with(getContext()).load(link)
+                                                                    .into(achievementImage);
+                                                            show_achievement.setText(dataSnapshotachieve
+                                                                    .child("achievementName")
+                                                                    .getValue(String.class));
+
+
+                                                        }
+                                                        break;
+                                                    }
+
+
+//
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+
+                                            break;
+                                        }
+
 
                                     }
 
-
+                                    break;
                                 }
 
                             }
-                        }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        usersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    //Log.e(dataSnapshot.getKey(), user.getUid());
+                                    if (user.getUid().equals(dataSnapshot.getKey())) {
 
-                        }
-                    });
+                                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                            if (isAdded()) {
+
+                                                Log.e(dataSnapshot1.child("link").getValue(String.class), dataSnapshot1.child("name")
+                                                        .getValue(String.class));
 
 
+                                                Glide.with(getContext()).load(dataSnapshot1.child("link")
+                                                                .getValue(String.class))
+                                                        .into(lastimage);
+                                                show_achievement.setText(dataSnapshot1
+                                                        .child("name")
+                                                        .getValue(String.class));
+                                            }
 
+
+                                        }
+
+
+                                    }
+
+                                    break;
+
+                                }
+                            }
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
+                    }
                 }
-            }
+            });
         });
+        thread.start();
 
 
 
@@ -178,12 +238,30 @@ public class HomeFragment extends Fragment {
 
             }
         });
-    }
 
+        achievementButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = AchievementActivity.newIntent(HomeFragment.this.getContext());
+                startActivity(intent);
+            }
+        });
+    }
+    private void initViews(View view)
+    {
+        achievementButton = view.findViewById(R.id.achievementButton);
+        achievementImage = view.findViewById(R.id.achievementImage);
+        show_achievement = view.findViewById(R.id.show_achievement);
+        button_history = getView().findViewById(R.id.button_history);
+        lastimage = getView().findViewById(R.id.lastimage);
+        show_name_text = getView().findViewById(R.id.show_name_text);
+    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
+
 }

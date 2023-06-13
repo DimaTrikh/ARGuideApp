@@ -1,17 +1,23 @@
 package com.example.arguideapp;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RegistrationViewModel extends ViewModel
 {
@@ -27,14 +33,19 @@ public class RegistrationViewModel extends ViewModel
 
     private static DatabaseReference achievementsReference;
 
+    private static DatabaseReference usersAchievementsReference;
+
 
 
     public RegistrationViewModel()
     {
         auth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+
         usersReference = firebaseDatabase.getReference("Users");
+        usersAchievementsReference = firebaseDatabase.getReference("UsersAchievements");
         achievementsReference = firebaseDatabase.getReference("Achievements");
+
         auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -68,50 +79,107 @@ public class RegistrationViewModel extends ViewModel
                         {
                             return;
                         }
-                        Achievement achievement;
+//                        Achievement achievement;
                         usersReference.child(firebaseUser.getUid()).setValue("");
+                        usersAchievementsReference.child(firebaseUser.getUid()).setValue("");
+
+                        achievementsReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                                {
+                                    if (dataSnapshot.child("achievementType").getValue(String.class).equals("Object"))
+                                    {
+                                        //Log.e("","Obj");
+                                        UserAchievement userAchievement = new UserAchievement(false);
+                                        usersAchievementsReference.child(firebaseUser.getUid()).child(dataSnapshot.getKey()).setValue(userAchievement);
 
 
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Moscow Kremlin",
-                                "Станьте иностранным агентом",
-                                "Сфотографируйте Московский Кремль",
-                                false));
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Luzhniki Stadium",
-                                "Русский Месси",
-                                "Сфотографируйте самую крупную футбольную арену в России",
-                                false));
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Pushkin Museum",
-                                "Мамкин литератор",
-                                "Сфотографируйте музей самого известного русского поэта",
-                                false));
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Church of the Savior on Blood",
-                                "Скатайте в Питер",
-                                "Сфотографируйте Храм Спаса на Крови",
-                                false));
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Lenin's Mausoleum",
-                                "Гриб",
-                                "Сфотографируйте Мавзолей Ленина",
-                                false));
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Moscow Kremlin&&State Historical Museum&&Lenin's Mausoleum&&Saint Basil's Cathedral",
-                                "Отец русского искусства",
-                                "Сфотографируйте основные объекты на Красной площади",
-                                false));
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Больше 10 объектов",
-                                "Недопутешественник",
-                                "Сфотографируйте 10 объектов",
-                                false));
-                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
-                                "Больше 50 объектов",
-                                "Вам заняться нечем????",
-                                "Сфотографируйте 50 объектов",
-                                false));
+
+                                    }
+                                    else if (dataSnapshot.child("achievementType").getValue(String.class).equals("manyObjects"))
+                                    {
+                                        //Log.e("","Objs");
+                                        UserAchievementObjs userAchievementObjs = new UserAchievementObjs(false, 0);
+                                        usersAchievementsReference.child(firebaseUser.getUid()).child(dataSnapshot.getKey()).setValue(userAchievementObjs);
+                                    }
+                                    else if(dataSnapshot.child("achievementType").getValue(String.class).equals("number"))
+                                    {
+                                        UserAchievementObjs userAchievementObjs = new UserAchievementObjs(false, 0);
+                                        usersAchievementsReference.child(firebaseUser.getUid()).child(dataSnapshot.getKey()).setValue(userAchievementObjs);
+                                        //Log.e("","num");
+                                    }
+
+//                                    Log.e("", dataSnapshot.child("achievementType").getValue(String.class));
+//                                    usersAchievementsReference.child(firebaseUser.getUid()).child(dataSnapshot.getKey()).setValue("");
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+//                        usersAchievementsReference.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                                for (DataSnapshot dataSnapshot : snapshot.getChildren())
+//                                {
+//                                    usersAchievementsReference.child(firebaseUser.getUid()).child(dataSnapshot.getKey()).setValue("");
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//
+//                            }
+//                        });
+
+
+
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Moscow Kremlin",
+//                                "Москва. Кремль. Путин",
+//                                "Сфотографируйте Московский Кремль",
+//                                false));
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Luzhniki Stadium",
+//                                "Русский Месси",
+//                                "Сфотографируйте самую крупную футбольную арену в России",
+//                                false));
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Pushkin Museum",
+//                                "Литератор",
+//                                "Сфотографируйте музей самого известного русского поэта",
+//                                false));
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Church of the Savior on Blood",
+//                                "Скатайте в Питер",
+//                                "Сфотографируйте Храм Спаса на Крови",
+//                                false));
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Lenin's Mausoleum",
+//                                "Гриб",
+//                                "Сфотографируйте Мавзолей Ленина",
+//                                false));
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Moscow Kremlin&&State Historical Museum&&Lenin's Mausoleum&&Saint Basil's Cathedral",
+//                                "Отец русского искусства",
+//                                "Сфотографируйте основные объекты на Красной площади",
+//                                false));
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Больше 10 объектов",
+//                                "Недопутешественник",
+//                                "Сфотографируйте 10 объектов",
+//                                false));
+//                        achievementsReference.child(firebaseUser.getUid()).push().setValue(new Achievement(
+//                                "Больше 50 объектов",
+//                                "Мажор",
+//                                "Сфотографируйте 50 объектов",
+//                                false));
 
 
 

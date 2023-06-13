@@ -12,6 +12,12 @@
         android:theme="@style/Theme.ARGuideApp"
         tools:targetApi="31">
         <activity
+            android:name=".AchievementDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AchievementActivity"
+            android:exported="false" />
+        <activity
             android:name=".history"
             android:exported="false" />
         <activity

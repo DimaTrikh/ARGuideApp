@@ -55,7 +55,7 @@ dependencies {
     //implementation 'com.azure:azure-identity:1.9.0'
     //implementation 'com.azure:azure-core:1.40.0'
     implementation 'com.azure:azure-storage-blob:12.14.1'
-    ///implementation 'com.azure:azure-sdk-bom:1.2.13'
+    //implementation 'com.azure:azure-sdk-bom:1.2.13'
     implementation 'javax.xml.stream:stax-api:1.0-2'
     implementation 'com.microsoft.azure.cognitiveservices:azure-cognitiveservices-computervision:1.0.9-beta'
     testImplementation 'org.slf4j:slf4j-simple:1.7.9'
