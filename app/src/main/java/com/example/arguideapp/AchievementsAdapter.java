@@ -1,5 +1,6 @@
 package com.example.arguideapp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,20 @@ import java.util.List;
 
 public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapter.AchievementsViewHolder> {
 
-    private List<Achievement> achievements = new ArrayList<>();
+    private List<Achievement.GetAchievement> achievements = new ArrayList<>();
 
-    public void setAchievements(List<Achievement> achievements)
+    private OnAchievementClickListener onAchievementClickListener;
+
+    public void setAchievements(List<Achievement.GetAchievement> achievements)
     {
         this.achievements = achievements;
         notifyDataSetChanged();
     }
 
+
+    public void setOnAchievementClickListener(OnAchievementClickListener onAchievementClickListener) {
+        this.onAchievementClickListener = onAchievementClickListener;
+    }
 
     @NonNull
     @Override
@@ -35,15 +42,35 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull AchievementsViewHolder holder, int position) {
-        Achievement achievement = achievements.get(position);
+        //Achievement.GetAchievement achievement123 = new Achievement.GetAchievement("","","","","", false, 10);
+//        Achievement achievement = achievements.get(position);
+        Achievement.GetAchievement achievement = achievements.get(position);
+        Log.e(achievement.getFoundName() + achievement.getAchievementType() + achievement.getAchievementName(), achievement.getLink() + achievement.getAchievementDescription());
         Glide.with(holder.itemView).load(achievement.getLink()).into(holder.imageViewPoster);
         holder.imageNamePoster.setText(achievement.getAchievementName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onAchievementClickListener != null)
+                {
+                    onAchievementClickListener.onAchievementClick(achievement);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return achievements.size();
     }
+
+
+    interface OnAchievementClickListener
+    {
+        void onAchievementClick(Achievement.GetAchievement achievement);
+    }
+
+
 
     static class AchievementsViewHolder extends RecyclerView.ViewHolder
     {

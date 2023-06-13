@@ -1,6 +1,8 @@
 package com.example.arguideapp;
 
-public class Achievement {
+import java.io.Serializable;
+
+public class Achievement implements Serializable {
     private String achievementName;
     private String achievementDescription;
 
@@ -9,6 +11,8 @@ public class Achievement {
     private String achievementType;
 
     private String link;
+
+
 
     public Achievement() {
     }
@@ -40,6 +44,15 @@ public class Achievement {
         this.achievementType = achievementType;
         this.foundName = foundName;
     }
+    public Achievement(String link, String achievementName, String achievementType, String achievementDescription, String foundName)
+    {
+        this.link = link;
+        this.achievementName = achievementName;
+        this.achievementType = achievementType;
+        this.achievementDescription = achievementDescription;
+        this.foundName = foundName;
+
+    }
 
     public String getAchievementName() {
         return achievementName;
@@ -58,4 +71,21 @@ public class Achievement {
     }
 
     public String getLink(){return link;}
+
+
+    public static class GetAchievement extends Achievement
+    {
+        private Integer progress;
+        private Boolean status;
+        public GetAchievement(String link, String achievementName, String achievementType, String achievementDescription,
+                              String foundName, Boolean status, Integer progress)
+        {
+            super(link, achievementName, achievementType, achievementDescription, foundName);
+            this.status = status;
+            this.progress = progress;
+        }
+
+        public Boolean getStatus(){return status;}
+        public Integer getProgress(){return progress;}
+    }
 }

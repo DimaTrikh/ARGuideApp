@@ -30,7 +30,7 @@ public class AchievementActivity extends AppCompatActivity {
     private static DatabaseReference usersAchievementsReference;
     private static DatabaseReference achievementsReference;
     private FirebaseAuth mAuth;
-    String link;
+
 
 
 
@@ -42,13 +42,22 @@ public class AchievementActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        List<Achievement> achievements = new ArrayList<>();
+        List<Achievement.GetAchievement> achievements = new ArrayList<>();
         usersAchievementsReference = firebaseDatabase.getReference("UsersAchievements");
         achievementsReference = firebaseDatabase.getReference("Achievements");
         recyclerViewAchievements = findViewById(R.id.recyclerviewAchievements);
         achievementsAdapter = new AchievementsAdapter();
         recyclerViewAchievements.setAdapter(achievementsAdapter);
         recyclerViewAchievements.setLayoutManager(new GridLayoutManager(this, 2));
+
+        achievementsAdapter.setOnAchievementClickListener(new AchievementsAdapter.OnAchievementClickListener() {
+            @Override
+            public void onAchievementClick(Achievement.GetAchievement achievement) {
+                Intent intent = AchievementDetailActivity.newIntent(AchievementActivity.this, achievement);
+                startActivity(intent);
+            }
+        });
+
 
         if(mAuth.getCurrentUser() != null)
         {
@@ -67,16 +76,36 @@ public class AchievementActivity extends AppCompatActivity {
 
                                         for (DataSnapshot dataSnapshotachieve : snapshotachieve.getChildren()) {
                                             if (dataSnapshotachieve.getKey().equals(usersAchievementsSnapshot1.getKey())) {
+                                                String link;
                                                 if (status) {
                                                     link = dataSnapshotachieve.child("completedLinkImage").getValue(String.class);
                                                 } else {
                                                     link = dataSnapshotachieve.child("notCompletedLinkImage").getValue(String.class);
                                                 }
-                                                Log.e(link, dataSnapshotachieve.child("achievementName").getValue(String.class));
+                                                //Log.e(link, dataSnapshotachieve.child("achievementName").getValue(String.class));
+                                                Integer progress;
+                                                String name = dataSnapshotachieve.child("achievementName").getValue(String.class);
+                                                String description = dataSnapshotachieve.child("achievementDescription").getValue(String.class);
+                                                String type = dataSnapshotachieve.child("achievementType").getValue(String.class);
+                                                String foundname = dataSnapshotachieve.child("foundName").getValue(String.class);
+                                                if(type.equals("Object"))
+                                                {
+                                                    progress = 0;
+                                                }
+                                                else progress = usersAchievementsSnapshot1.child("progress").getValue(Integer.class);
 
 
-                                                Achievement achievement = new Achievement(dataSnapshotachieve.child("achievementName").getValue(String.class), link);
-                                                achievements.add(achievement);
+                                                Achievement.GetAchievement achievement1 = new Achievement.GetAchievement(link,
+                                                        name,
+                                                        type,
+                                                        description,
+                                                        foundname,
+                                                        status,
+                                                        progress);
+
+
+
+                                                achievements.add(achievement1);
 
 
 
