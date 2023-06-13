@@ -192,7 +192,7 @@ public class HomeFragment extends Fragment {
                                                 Glide.with(getContext()).load(dataSnapshot1.child("link")
                                                                 .getValue(String.class))
                                                         .into(lastimage);
-                                                show_achievement.setText(dataSnapshot1
+                                                show_name_text.setText(dataSnapshot1
                                                         .child("name")
                                                         .getValue(String.class));
                                             }

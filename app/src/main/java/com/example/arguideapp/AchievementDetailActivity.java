@@ -66,7 +66,8 @@ public class AchievementDetailActivity extends AppCompatActivity {
 
             ProgressBarText.setText(String.valueOf(achievement.getProgress()) + "/" + s.length);
 
-            ProgressBar.setProgress((Integer) (s.length/achievement.getProgress() * 100));
+
+            ProgressBar.setProgress((Integer) (achievement.getProgress() * 100/s.length ));
         }
         else if(achievement.getAchievementType().equals("number"))
         {

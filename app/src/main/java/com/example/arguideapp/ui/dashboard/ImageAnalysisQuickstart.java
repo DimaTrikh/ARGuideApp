@@ -113,11 +113,7 @@ public class ImageAnalysisQuickstart {
                                         res = res.replace(String.valueOf(c), "");
                                     }
 
-                                    //TODO:System.out.println(res);
                                     currentRequest = res;
-                                    //Log.e("RESULTTTTTTTTTTTTTTTTTT", res);
-
-
                                     return;
                                 }
 
