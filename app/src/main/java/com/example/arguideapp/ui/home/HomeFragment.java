@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment {
                                                             } else {
                                                                 link = dataSnapshotachieve.child("notCompletedLinkImage").getValue(String.class);
                                                             }
-                                                            Log.e(link, dataSnapshotachieve.child("achievementName").getValue(String.class));
+                                                            //Log.e(link, dataSnapshotachieve.child("achievementName").getValue(String.class));
 
 
                                                             Glide.with(getContext()).load(link)
@@ -185,8 +185,8 @@ public class HomeFragment extends Fragment {
                                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                             if (isAdded()) {
 
-                                                Log.e(dataSnapshot1.child("link").getValue(String.class), dataSnapshot1.child("name")
-                                                        .getValue(String.class));
+//                                                Log.e(dataSnapshot1.child("link").getValue(String.class), dataSnapshot1.child("name")
+//                                                        .getValue(String.class));
 
 
                                                 Glide.with(getContext()).load(dataSnapshot1.child("link")

@@ -312,17 +312,17 @@ public class DashboardFragment extends Fragment {
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                             {
                                 String name = dataSnapshot1.child("name").getValue(String.class);
-                                Log.e("", name);
+                                //Log.e("", name);
 
                                 if (name.equals(ImageAnalysisQuickstart.getCurrentRequest()))
                                 {
                                     exists = true;
-                                    Log.e(name, ImageAnalysisQuickstart.getCurrentRequest());
+                                    //Log.e(name, ImageAnalysisQuickstart.getCurrentRequest());
                                 }
 
                             }
 
-                            Log.e("", exists.toString());
+                            //Log.e("", exists.toString());
                             if (!exists)
                             {
 
@@ -354,17 +354,17 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot123) {
 
-                Log.e("dad","dada");
+                //Log.e("dad","dada");
 
                 for (DataSnapshot usersAchievementsSnapshot : snapshot123.getChildren()) {
-                    Log.e(usersAchievementsSnapshot.getKey(), user123.getUid());
+                    //Log.e(usersAchievementsSnapshot.getKey(), user123.getUid());
                     if (usersAchievementsSnapshot.getKey().equals(user123.getUid())) {
 
                         for (DataSnapshot usersAchievementsSnapshot1 : usersAchievementsSnapshot.getChildren()) {
                             Boolean status = usersAchievementsSnapshot1.child("status").getValue(Boolean.class);
-                            Log.e(status.toString(),"");
+                            //Log.e(status.toString(),"");
                             if (!status) {
-                                Log.e("123", usersAchievementsSnapshot1.getKey());
+                                //Log.e("123", usersAchievementsSnapshot1.getKey());
                                 //String Key = usersAchievementsSnapshot1.getKey();
                                 achievementsReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
@@ -376,11 +376,11 @@ public class DashboardFragment extends Fragment {
                                                         .getValue(String.class)
                                                         .equals("Object")) {//Если объекты совпадают установить true
 
-                                                    Log.e("123", "123");
+                                                    //Log.e("123", "123");
 
-                                                    Log.e(ImageAnalysisQuickstart
-                                                            .getCurrentRequest(), dataSnapshotachieve.child("foundName")
-                                                            .getValue(String.class));
+                                                    //Log.e(ImageAnalysisQuickstart
+                                                            //.getCurrentRequest(), dataSnapshotachieve.child("foundName")
+                                                            //.getValue(String.class));
 
                                                     if (dataSnapshotachieve.child("foundName")
                                                             .getValue(String.class)
@@ -392,7 +392,7 @@ public class DashboardFragment extends Fragment {
                                                 } else if (dataSnapshotachieve.child("achievementType")
                                                         .getValue(String.class)
                                                         .equals("manyObjects")) {
-                                                    Log.e("1234", "1234");
+                                                    //Log.e("1234", "1234");
 
                                                     String[] Objects = dataSnapshotachieve.child("foundName").getValue(String.class).split("&&");
                                                     for (String name : Objects) {
@@ -414,7 +414,7 @@ public class DashboardFragment extends Fragment {
                                                 } else if (dataSnapshotachieve.child("achievementType")
                                                         .getValue(String.class)
                                                         .equals("number")) {
-                                                    Log.e("1234", "1234");
+                                                    //Log.e("1234", "1234");
                                                     Integer progress = usersAchievementsSnapshot1.child("progress").getValue(Integer.class);
                                                     progress++;
                                                     Boolean status;
@@ -429,7 +429,7 @@ public class DashboardFragment extends Fragment {
                                                 }
 
 
-                                                Log.e("", dataSnapshotachieve.child("achievementType").getValue(String.class));
+                                                //Log.e("", dataSnapshotachieve.child("achievementType").getValue(String.class));
 
                                                 break;
                                             }

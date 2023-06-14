@@ -45,7 +45,7 @@ public class AchievementsAdapter extends RecyclerView.Adapter<AchievementsAdapte
         //Achievement.GetAchievement achievement123 = new Achievement.GetAchievement("","","","","", false, 10);
 //        Achievement achievement = achievements.get(position);
         Achievement.GetAchievement achievement = achievements.get(position);
-        Log.e(achievement.getFoundName() + achievement.getAchievementType() + achievement.getAchievementName(), achievement.getLink() + achievement.getAchievementDescription());
+        //Log.e(achievement.getFoundName() + achievement.getAchievementType() + achievement.getAchievementName(), achievement.getLink() + achievement.getAchievementDescription());
         Glide.with(holder.itemView).load(achievement.getLink()).into(holder.imageViewPoster);
         holder.imageNamePoster.setText(achievement.getAchievementName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
