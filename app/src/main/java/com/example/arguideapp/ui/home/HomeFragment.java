@@ -104,20 +104,18 @@ public class HomeFragment extends Fragment {
 
 
         Thread thread = new Thread(() -> {
-            mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user != null) {
+
+
+                    if (mAuth.getCurrentUser() != null) {
 
 
                         usersAchievementsReference.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                    if (user.getUid().equals(dataSnapshot.getKey())) {
 
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    if (mAuth.getUid().equals(dataSnapshot.getKey())) {
                                         for (DataSnapshot usersAchievementsSnapshot1 : dataSnapshot.getChildren()) {
                                             Boolean status = usersAchievementsSnapshot1.child("status").getValue(Boolean.class);
 
@@ -132,8 +130,6 @@ public class HomeFragment extends Fragment {
                                                             } else {
                                                                 link = dataSnapshotachieve.child("notCompletedLinkImage").getValue(String.class);
                                                             }
-                                                            //Log.e(link, dataSnapshotachieve.child("achievementName").getValue(String.class));
-
 
                                                             Glide.with(getContext()).load(link)
                                                                     .into(achievementImage);
@@ -143,7 +139,7 @@ public class HomeFragment extends Fragment {
 
 
                                                         }
-                                                        break;
+
                                                     }
 
 
@@ -156,13 +152,13 @@ public class HomeFragment extends Fragment {
                                                 }
                                             });
 
-                                            break;
+
                                         }
 
 
                                     }
 
-                                    break;
+
                                 }
 
                             }
@@ -180,7 +176,7 @@ public class HomeFragment extends Fragment {
 
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     //Log.e(dataSnapshot.getKey(), user.getUid());
-                                    if (user.getUid().equals(dataSnapshot.getKey())) {
+                                    if (mAuth.getUid().equals(dataSnapshot.getKey())) {
 
                                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                             if (isAdded()) {
@@ -196,15 +192,8 @@ public class HomeFragment extends Fragment {
                                                         .child("name")
                                                         .getValue(String.class));
                                             }
-
-
                                         }
-
-
                                     }
-
-                                    break;
-
                                 }
                             }
 
@@ -217,8 +206,7 @@ public class HomeFragment extends Fragment {
 
 
                     }
-                }
-            });
+
         });
         thread.start();
 
